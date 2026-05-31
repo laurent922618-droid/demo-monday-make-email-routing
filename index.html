@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RouteIQ — Monday.com + Make.com Email Intelligence Router</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',sans-serif;background:#0d1117;color:#e2e8f0;min-height:100vh}
+  .header{background:linear-gradient(135deg,#e63946 0%,#f4a261 100%);padding:20px 40px;display:flex;align-items:center;justify-content:space-between}
+  .logo{font-size:1.5rem;font-weight:800;color:#fff;letter-spacing:-1px}
+  .logo span{color:#ffd166}
+  .badge{background:rgba(0,0,0,0.2);color:#fff;padding:4px 14px;border-radius:20px;font-size:0.75rem;font-weight:600}
+  .container{max-width:1200px;margin:0 auto;padding:32px 24px}
+  .hero{text-align:center;padding:36px 0 28px}
+  .hero h1{font-size:2rem;font-weight:800;margin-bottom:10px;background:linear-gradient(to right,#f4a261,#e63946);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p{color:#94a3b8;font-size:0.95rem;max-width:520px;margin:0 auto 24px;line-height:1.6}
+  .routing-demo{background:#161b22;border-radius:20px;padding:28px;margin-bottom:24px;border:1px solid #21262d}
+  .rt-title{font-size:0.78rem;font-weight:700;text-transform:uppercase;color:#64748b;letter-spacing:1px;margin-bottom:20px}
+  .email-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:0;align-items:start}
+  .ef-col{background:#0d1117;border-radius:12px;padding:16px;border:1px solid #21262d}
+  .ef-arrow{display:flex;align-items:center;justify-content:center;padding:0 12px;font-size:1.5rem;color:#f4a261;margin-top:20px}
+  .ef-title{font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#64748b;letter-spacing:0.5px;margin-bottom:12px}
+  .email-card{background:#161b22;border-radius:8px;padding:10px 12px;margin-bottom:8px;border-left:3px solid #334155;cursor:pointer;transition:all 0.2s}
+  .email-card:hover{border-left-color:#f4a261;background:#1c2128}
+  .email-card.urgent{border-left-color:#e63946}
+  .email-card.support{border-left-color:#2563eb}
+  .email-card.sales{border-left-color:#0e9f6e}
+  .email-from{font-size:0.78rem;font-weight:700;color:#e2e8f0}
+  .email-subj{font-size:0.72rem;color:#64748b;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .email-tag{font-size:0.65rem;padding:2px 6px;border-radius:100px;font-weight:700;margin-top:4px;display:inline-block}
+  .tag-urgent{background:rgba(230,57,70,0.2);color:#ef4444}
+  .tag-support{background:rgba(37,99,235,0.2);color:#60a5fa}
+  .tag-sales{background:rgba(14,159,110,0.2);color:#34d399}
+  .tag-billing{background:rgba(245,158,11,0.2);color:#fbbf24}
+  .rule-item{display:flex;align-items:center;gap:10px;padding:10px;background:#0d1117;border-radius:8px;margin-bottom:8px}
+  .rule-icon{font-size:1rem}
+  .rule-text{font-size:0.8rem;color:#94a3b8;flex:1}
+  .rule-badge{font-size:0.68rem;padding:2px 8px;border-radius:100px;font-weight:700}
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+  .stat{background:#161b22;border-radius:12px;padding:18px;text-align:center;border:1px solid #21262d}
+  .stat-v{font-size:1.8rem;font-weight:800;background:linear-gradient(to right,#f4a261,#e63946);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .stat-l{font-size:0.7rem;color:#64748b;margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
+  .monday-board{background:#161b22;border-radius:16px;padding:20px;border:1px solid #21262d;margin-bottom:20px}
+  .board-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  .board-title{font-weight:700;font-size:1rem}
+  .board-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .col-header{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:8px;border-radius:6px;text-align:center;margin-bottom:8px}
+  .col-new{background:rgba(100,116,139,0.15);color:#94a3b8}
+  .col-open{background:rgba(37,99,235,0.15);color:#60a5fa}
+  .col-progress{background:rgba(245,158,11,0.15);color:#fbbf24}
+  .col-done{background:rgba(14,159,110,0.15);color:#34d399}
+  .ticket{background:#0d1117;border-radius:8px;padding:10px;margin-bottom:8px;font-size:0.78rem;border:1px solid #21262d}
+  .ticket-id{color:#64748b;font-size:0.68rem}
+  .ticket-title{color:#e2e8f0;margin-top:2px}
+  .ticket-meta{color:#475569;font-size:0.68rem;margin-top:4px}
+  .btn{background:linear-gradient(135deg,#e63946,#f4a261);color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:0.88rem;font-weight:700;cursor:pointer;transition:opacity 0.2s}
+  .btn:hover{opacity:0.85}
+  .footer{text-align:center;padding:24px;color:#334155;font-size:0.8rem;border-top:1px solid #21262d;margin-top:24px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">Route<span>IQ</span></div>
+  <div class="badge">&#9679; LIVE DEMO — by Laurent M.</div>
+</div>
+<div class="container">
+  <div class="hero">
+    <h1>Smart Email Routing for Google Workspace</h1>
+    <p>Monday.com + Make.com integration that intelligently classifies and routes emails to the right team — automatically, with zero manual work.</p>
+    <button class="btn" onclick="simulateRoute()">&#9654; Process Incoming Email</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-v">3,891</div><div class="stat-l">Emails Routed</div></div>
+    <div class="stat"><div class="stat-v">94%</div><div class="stat-l">AI Accuracy</div></div>
+    <div class="stat"><div class="stat-v">1.2s</div><div class="stat-l">Routing Time</div></div>
+    <div class="stat"><div class="stat-v">12</div><div class="stat-l">Routing Rules</div></div>
+  </div>
+  <div class="routing-demo">
+    <div class="rt-title">&#127759; AI Email Routing Pipeline</div>
+    <div class="email-flow">
+      <div class="ef-col">
+        <div class="ef-title">&#128235; Incoming (Gmail)</div>
+        <div class="email-card urgent" onclick="simulateRoute()">
+          <div class="email-from">ceo@bigcorp.com</div>
+          <div class="email-subj">URGENT: Contract renewal issue</div>
+          <span class="email-tag tag-urgent">Urgent</span>
+        </div>
+        <div class="email-card support">
+          <div class="email-from">user@example.com</div>
+          <div class="email-subj">Can't login to my account</div>
+          <span class="email-tag tag-support">Support</span>
+        </div>
+        <div class="email-card sales">
+          <div class="email-from">lead@prospect.io</div>
+          <div class="email-subj">Interested in Enterprise plan</div>
+          <span class="email-tag tag-sales">Sales</span>
+        </div>
+      </div>
+      <div class="ef-arrow">&#8594;</div>
+      <div class="ef-col">
+        <div class="ef-title">&#129302; Make.com Rules</div>
+        <div class="rule-item"><div class="rule-icon">&#128293;</div><div class="rule-text">Keywords: urgent, asap, critical</div><span class="rule-badge tag-urgent">Exec Team</span></div>
+        <div class="rule-item"><div class="rule-icon">&#128736;</div><div class="rule-text">From: @bigcorp, @enterprise.io</div><span class="rule-badge tag-sales">Sales</span></div>
+        <div class="rule-item"><div class="rule-icon">&#128269;</div><div class="rule-text">Subject: can't, help, error, broken</div><span class="rule-badge tag-support">Support</span></div>
+        <div class="rule-item"><div class="rule-icon">&#128178;</div><div class="rule-text">Subject: invoice, payment, billing</div><span class="rule-badge tag-billing">Finance</span></div>
+      </div>
+      <div class="ef-arrow">&#8594;</div>
+      <div class="ef-col">
+        <div class="ef-title">&#128203; Monday.com Board</div>
+        <div id="board-items">
+          <div class="ticket"><div class="ticket-id">#4821</div><div class="ticket-title">CEO contract renewal &#128293;</div><div class="ticket-meta">Assigned: Sarah (PM) • Priority: Critical</div></div>
+          <div class="ticket"><div class="ticket-id">#4820</div><div class="ticket-title">Login issue — support ticket</div><div class="ticket-meta">Assigned: Tech Support • Priority: Normal</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="monday-board">
+    <div class="board-header">
+      <div class="board-title">&#128203; Monday.com — Email Tickets Board</div>
+      <span style="font-size:0.78rem;color:#64748b;">Live sync via Make.com webhook</span>
+    </div>
+    <div class="board-cols">
+      <div>
+        <div class="col-header col-new">&#128228; New (3)</div>
+        <div class="ticket"><div class="ticket-id">#4823</div><div class="ticket-title">Billing question Q3</div><div class="ticket-meta">Finance • Low</div></div>
+        <div class="ticket" id="new-ticket" style="display:none;border-left:3px solid #f4a261"><div class="ticket-id">#4824</div><div class="ticket-title">New email routed &#9889;</div><div class="ticket-meta">AI assigned • High</div></div>
+      </div>
+      <div>
+        <div class="col-header col-open">&#128221; Open (4)</div>
+        <div class="ticket"><div class="ticket-id">#4819</div><div class="ticket-title">Onboarding flow issue</div><div class="ticket-meta">Support • Normal</div></div>
+        <div class="ticket"><div class="ticket-id">#4818</div><div class="ticket-title">API key not working</div><div class="ticket-meta">Tech • High</div></div>
+      </div>
+      <div>
+        <div class="col-header col-progress">&#9881; In Progress (2)</div>
+        <div class="ticket"><div class="ticket-id">#4815</div><div class="ticket-title">Enterprise demo request</div><div class="ticket-meta">Sales • Critical</div></div>
+      </div>
+      <div>
+        <div class="col-header col-done">&#10003; Done (12)</div>
+        <div class="ticket"><div class="ticket-id">#4812</div><div class="ticket-title">Feature request closed</div><div class="ticket-meta">PM • Normal</div></div>
+        <div class="ticket"><div class="ticket-id">#4810</div><div class="ticket-title">Renewal confirmed &#127881;</div><div class="ticket-meta">Sales • Closed</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="footer">Built by <strong>Laurent M.</strong> &mdash; Monday.com + Make.com + Google Workspace Expert &mdash; Proof of Concept</div>
+<script>
+function simulateRoute() {
+  const newTicket = document.getElementById('new-ticket');
+  newTicket.style.display = 'block';
+  setTimeout(() => { newTicket.style.display = 'none'; }, 5000);
+  const boardItems = document.getElementById('board-items');
+  const t = document.createElement('div');
+  t.className = 'ticket';
+  t.style.borderLeft = '3px solid #f4a261';
+  t.innerHTML = '<div class="ticket-id">#' + (4824 + Math.floor(Math.random()*10)) + '</div><div class="ticket-title">New email auto-routed &#9889;</div><div class="ticket-meta">AI classified: Urgent • Exec Team</div>';
+  boardItems.insertBefore(t, boardItems.firstChild);
+  setTimeout(() => { if(t.parentNode) t.parentNode.removeChild(t); }, 5000);
+}
+</script>
+</body>
+  </html>
